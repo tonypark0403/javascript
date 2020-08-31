@@ -3,9 +3,25 @@ const quoteText = document.querySelector('#quote');
 const authorText = document.querySelector('#author');
 const twitterBtn = document.querySelector('#twitter');
 const newQuoteBtn = document.querySelector('#new-quote');
+const loader = document.querySelector('#loader');
+
+// Show Loading
+function showLoadingSpinner() {
+  loader.hidden = false;
+  quoteContainer.hidden = true;
+}
+
+// Hide Loading
+function removeLoadingSpinner() {
+  if (!loader.hidden) {
+    quoteContainer.hidden = false;
+    loader.hidden = true;
+  }
+}
 
 // Get Quote From API
 async function getQuote() {
+  showLoadingSpinner();
   const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
   const apiUrl =
     'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
@@ -25,6 +41,9 @@ async function getQuote() {
       quoteText.classList.remove('long-quote');
     }
     quoteText.innerText = data.quoteText;
+    // Stop Loader, Show Quote
+    removeLoadingSpinner();
+    // throw new Error('oops'); // In this case, infinite loop
   } catch (error) {
     getQuote(); // when error is happened, need to call it again.
     // console.log('whoops, no quote', error);
